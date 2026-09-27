@@ -9,7 +9,6 @@ A BepInEx mod that adds a public lobby browser to Lucid Cats. Find and join othe
 - Browse public lobbies from other players (worldwide search)
 - Shows host name and player count
 - Click a room to join it
-- Native in-game UI, matching the game's own menu style
 - Refresh button to re-search
 
 ## Requirements
@@ -58,7 +57,6 @@ A BepInEx mod that adds a public lobby browser to Lucid Cats. Find and join othe
 - 浏览其他玩家的公开房间（全球搜索）
 - 显示房主名与人数
 - 点击房间即可加入
-- 游戏原生 UI，风格与游戏菜单一致
 - 刷新按钮可重新搜索
 
 ## 前置要求
