@@ -9,7 +9,10 @@ A BepInEx mod that adds a public lobby browser to Lucid Cats. Find and join othe
 - Browse public lobbies from other players (worldwide search)
 - Shows host name and player count
 - Click a room to join it
+- Native in-game UI, matching the game's own menu style
 - Refresh button to re-search
+- Host can press F5 to set/remove a room code (shown top-left)
+- Join a private room by entering its code
 
 ## Requirements
 
@@ -38,6 +41,8 @@ A BepInEx mod that adds a public lobby browser to Lucid Cats. Find and join othe
 - In the main menu, click **Lobby** to open the browser.
 - Click a room row to join it.
 - Click **Refresh** (bottom-left of the panel) to re-search.
+- As host, press **F5** to toggle a room code (status is shown top-left).
+- To join a private room, click **Join by code** and enter the code.
 
 ## Notes
 
@@ -57,7 +62,10 @@ A BepInEx mod that adds a public lobby browser to Lucid Cats. Find and join othe
 - 浏览其他玩家的公开房间（全球搜索）
 - 显示房主名与人数
 - 点击房间即可加入
+- 游戏原生 UI，风格与游戏菜单一致
 - 刷新按钮可重新搜索
+- 主机可按 F5 设置/取消房间码（左上角显示状态）
+- 输入房间码即可加入私人房间
 
 ## 前置要求
 
@@ -86,6 +94,8 @@ A BepInEx mod that adds a public lobby browser to Lucid Cats. Find and join othe
 - 在主菜单点击 **Lobby** 打开浏览器。
 - 点击某个房间行即可加入。
 - 点击 **Refresh**（面板左下角）重新搜索。
+- 主机按 **F5** 切换房间码（状态显示在左上角）。
+- 点击 **Join by code** 输入房间码加入私人房间。
 
 ## 说明
 
