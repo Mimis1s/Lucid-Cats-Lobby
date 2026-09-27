@@ -12,20 +12,30 @@ using Unity.Netcode;
 
 namespace LucidCatsLobby
 {
-    [BepInPlugin("lucidcats.lobby", "Lucid Cats 联机大厅", "1.1.0")]
+    [BepInPlugin(Guid, Name, Version)]
     public class LobbyPlugin : BaseUnityPlugin
     {
+        public const string Guid = "lucidcats.lobby";
+        public const string Name = "Lucid Cats 联机大厅";
+        public const string Version = "1.2.0";
+
         internal static ManualLogSource Log;
 
         private void Awake()
         {
             Log = Logger;
-            Log.LogInfo("=== Lucid Cats 联机大厅插件启动 ===");
+            Log.LogInfo($"{Name} v{Version} loaded");
+
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             var go = new GameObject("LucidCatsLobby_RoomCodeManager");
             DontDestroyOnLoad(go);
             go.AddComponent<LobbyRoomCodeManager>();
+        }
+
+        private void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

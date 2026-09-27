@@ -32,7 +32,9 @@ namespace LucidCatsLobby
         private Transform panelTransform;
 
         private Transform grid;
+        private Transform content;
         private GameObject rowTemplate;
+        private float rowHeight;
         private TMP_Text statusText;
         private Lobby[] lobbies;
         private bool loading;
@@ -150,6 +152,37 @@ namespace LucidCatsLobby
             foreach (Transform child in grid)
                 Object.Destroy(child.gameObject);
 
+            // 列表滚动：grid 作为视口，手动定位行
+            var gridLayout = grid.GetComponent<LayoutGroup>();
+            if (gridLayout != null) gridLayout.enabled = false;
+
+            grid.gameObject.AddComponent<RectMask2D>();
+
+            var contentGo = new GameObject("Lobby Content", typeof(RectTransform));
+            content = contentGo.transform;
+            content.SetParent(grid, false);
+            var contentRect = (RectTransform)content;
+            contentRect.anchorMin = new Vector2(0f, 1f);
+            contentRect.anchorMax = new Vector2(1f, 1f);
+            contentRect.pivot = new Vector2(0.5f, 1f);
+            contentRect.offsetMin = new Vector2(0f, 0f);
+            contentRect.offsetMax = new Vector2(0f, 0f);
+
+            rowHeight = ((RectTransform)rowTemplate.transform).rect.height;
+            if (rowHeight <= 0f) rowHeight = 30f;
+
+            // grid 底部上缩，给左下角按钮留空间
+            var gridRect = (RectTransform)grid;
+            gridRect.offsetMin = new Vector2(gridRect.offsetMin.x, gridRect.offsetMin.y + 50f);
+
+            var scroll = grid.gameObject.AddComponent<ScrollRect>();
+            scroll.viewport = (RectTransform)grid;
+            scroll.content = contentRect;
+            scroll.horizontal = false;
+            scroll.vertical = true;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.scrollSensitivity = 30f;
+
             panel.transform.SetParent(statsPanel.parent, false);
             panel.transform.SetSiblingIndex(statsPanel.GetSiblingIndex() + 1);
             Object.Destroy(holder);
@@ -169,7 +202,7 @@ namespace LucidCatsLobby
             rect.anchorMin = new Vector2(0f, 0f);
             rect.anchorMax = new Vector2(0f, 0f);
             rect.pivot = new Vector2(0f, 0f);
-            rect.anchoredPosition = new Vector2(30f, 30f);
+            rect.anchoredPosition = new Vector2(30f, 12f);
             rect.localScale = new Vector3(0.6f, 0.6f, 1f);
 
             TMP_Text label = btn.GetComponentInChildren<TMP_Text>(true);
@@ -192,7 +225,7 @@ namespace LucidCatsLobby
             rect.anchorMin = new Vector2(0f, 0f);
             rect.anchorMax = new Vector2(0f, 0f);
             rect.pivot = new Vector2(0f, 0f);
-            rect.anchoredPosition = new Vector2(130f, 30f);
+            rect.anchoredPosition = new Vector2(130f, 12f);
             rect.localScale = new Vector3(0.6f, 0.6f, 1f);
 
             TMP_Text label = btn.GetComponentInChildren<TMP_Text>(true);
@@ -218,8 +251,16 @@ namespace LucidCatsLobby
 
         private RoomRow CreateRoomRow(Lobby lobby)
         {
-            GameObject go = Object.Instantiate(rowTemplate, grid, false);
+            GameObject go = Object.Instantiate(rowTemplate, content, false);
             go.SetActive(true);
+
+            // 手动定位：顶部锚定、全宽、固定行高、按序号排
+            var rect = (RectTransform)go.transform;
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(0.5f, 1f);
+            rect.sizeDelta = new Vector2(0f, rowHeight);
+            rect.anchoredPosition = new Vector2(0f, -rows.Count * rowHeight);
 
             var row = new RoomRow
             {
@@ -283,6 +324,10 @@ namespace LucidCatsLobby
                     row.Count.text = lobby.MemberCount + "/" + lobby.MaxMembers;
                 rows.Add(row);
             }
+
+            // 根据行数设置 content 高度，让 ScrollRect 能滚动
+            if (content != null)
+                ((RectTransform)content).sizeDelta = new Vector2(0f, rows.Count * rowHeight);
         }
 
         private string GetOwnerName(Lobby lobby)
